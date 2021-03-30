@@ -8,19 +8,13 @@ namespace BreadTh.StronglyApied.Http
 {
     public class RestTransformer : IRestTransformer
     {
-        IRestClient _client;
-        public RestTransformer(IRestClient client)
-        {
-            _client = client;
-        }
-
         public static Transformer<OUTPUT_MODEL> CreateModelTransformer<OUTPUT_MODEL, INPUT_BODY_MODEL>(
             ModelTransformer<OUTPUT_MODEL, INPUT_BODY_MODEL> transform)
         {
             TransformOutcome<OUTPUT_MODEL> Result(int retryCount, IRestResponse restResponse)
             {
                 (INPUT_BODY_MODEL model, List<ErrorDescription> validationErrors) =
-                    new ModelValidator().TryParse<INPUT_BODY_MODEL>(restResponse.Content);
+                    new ModelValidator().Parse<INPUT_BODY_MODEL>(restResponse.Content);
 
                 if (validationErrors.Count == 0)
                     return transform(retryCount, restResponse, model);
@@ -37,10 +31,10 @@ namespace BreadTh.StronglyApied.Http
             const int attempts = 10;
 
             if (response.ResponseStatus != ResponseStatus.Completed)
-                if (retryCount >= 10)
+                if (retryCount >= attempts)
                     return Abort.From(
                         $"Transport error. ResponseStatus was still {response.ResponseStatus} after {attempts} attempts. "
-                    + $"restSharp error message: {response.ErrorMessage}");
+                    +   $"restSharp error message: {response.ErrorMessage}");
                 else
                     return Retry.From(TimeSpan.FromMilliseconds(0));
 
@@ -60,6 +54,12 @@ namespace BreadTh.StronglyApied.Http
                 return Retry.From(TimeSpan.FromMilliseconds(new int[] { 0, 1_000, 5_000, 10_000, 60_000 }[retryCount]));
 
             return new Next();
+        }
+
+        IRestClient _client;
+        public RestTransformer(IRestClient client)
+        {
+            _client = client;
         }
 
         public OUTPUT_MODEL Execute<OUTPUT_MODEL>(IRestRequest request, params Transformer<OUTPUT_MODEL>[] transformers)
