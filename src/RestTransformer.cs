@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using RestSharp;
 using System;
+using System.Linq;
 
 namespace BreadTh.StronglyApied.Http
 {
@@ -90,10 +91,20 @@ namespace BreadTh.StronglyApied.Http
             }
 
             throw new OutOfTransformersException(
-                $"No {typeof(Transformer<OUTPUT_MODEL>).FullName} was available for parsing the rest call response:\n"
+              $"No {ResolveGenericDisplayName(typeof(Transformer<OUTPUT_MODEL>))} was able to parse the rest call response:\n"
             + $"StatusCode: {response.StatusCode}\n"
-            + $"Headers: {response.Headers}\n"
-            + $"Body: {response.Content}");
+            + $"Headers: \n{string.Join('\n', response.Headers.Select(header => header.Name + ": " + header.Value))}\n"
+            + $"Body: \n{response.Content}\n");
+        }
+
+
+        private static string ResolveGenericDisplayName(Type type)
+        {
+            if(!type.IsGenericType)
+                return type.Name;
+
+            return type.GetGenericTypeDefinition().Name.Split('`')[0]
+                + "<" + string.Join(", ", type.GetGenericArguments().Select((childType) => ResolveGenericDisplayName(childType))) + ">";
         }
     }
 }
