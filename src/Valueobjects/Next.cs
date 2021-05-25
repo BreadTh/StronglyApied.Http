@@ -1,5 +1,5 @@
 ﻿namespace BreadTh.StronglyApied.Http
 {
-    public class Next { }
+    public record Next(string reason);
 }
 
