@@ -135,7 +135,7 @@ namespace BreadTh.StronglyApied.Http
 
                 else if (retryOrAbort.TryPickT0(out Retry retry, out Abort abort))
                 {
-                    Console.WriteLine($"Sleeping for {retry.Value.TotalSeconds} seconds.");
+                    Console.WriteLine($"Sleeping for {retry.Value} miliseconds.");
                     Thread.Sleep(retry.Value);
                     retryCount++;
                     goto retry;
