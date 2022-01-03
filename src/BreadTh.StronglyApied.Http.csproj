@@ -7,15 +7,15 @@
     <Copyright>BreadTh</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/BreadTh/StronglyApied.Http</PackageProjectUrl>
-    <Version>1.0.0.4</Version>
+    <Version>1.0.0.5</Version>
     <AssemblyVersion>1.0.0.4</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BreadTh.StronglyApied" Version="2.0.0.10" />
-    <PackageReference Include="OneOf" Version="3.0.178" />
-    <PackageReference Include="RestSharp" Version="106.11.7" />
-    <PackageReference Include="ValueOf" Version="1.0.17" />
+    <PackageReference Include="BreadTh.StronglyApied" Version="2.0.0.11" />
+    <PackageReference Include="OneOf" Version="3.0.205" />
+    <PackageReference Include="RestSharp" Version="106.15.0" />
+    <PackageReference Include="ValueOf" Version="2.0.21" />
   </ItemGroup>
 
   <ItemGroup>
